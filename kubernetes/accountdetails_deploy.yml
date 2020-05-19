@@ -13,7 +13,7 @@ spec:
   spec:
    containers:
     - name: details
-      image: ksaminat/details:6.0
+      image: ksaminat/details:1.10
  replicas: 1
  selector:
   matchLabels:
