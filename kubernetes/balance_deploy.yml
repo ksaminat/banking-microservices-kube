@@ -1,0 +1,21 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: balance-dp
+ labels:
+  app: balance-dp-key
+spec:
+ template:
+  metadata:
+   name: balance-app
+   labels:
+    app: balance-app-key
+  spec:
+   containers:
+    - name: balance
+      image: ksaminat/balance:1.0
+ replicas: 3
+ selector:
+  matchLabels:
+   app: balance-app-key
+   

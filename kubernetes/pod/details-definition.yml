@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: banking-app
+  labels:
+    app: banking-app
+spec:
+  containers:
+    - name: banking
+      image: ksaminat/services:latest

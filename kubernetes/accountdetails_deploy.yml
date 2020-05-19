@@ -1,0 +1,20 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+ name: details-dp
+ labels:
+  app: details-dp-key
+spec:
+ template:
+  metadata:
+   name: details-app
+   labels:
+    app: details-app-key
+  spec:
+   containers:
+    - name: details
+      image: ksaminat/details:6.0
+ replicas: 1
+ selector:
+  matchLabels:
+   app: details-app-key
