@@ -1,0 +1,32 @@
+version: '3.0'
+networks:
+ default:
+  driver: bridge
+
+services:
+ bankingserver:
+  build: service\
+  expose:
+   - '8761'
+  ports:
+   - '8761:8761'
+
+ bankingaccount:
+  build: details\
+  expose:
+    - '8081'
+  ports:
+   - '8081:8081'
+  depends_on:
+   - bankingserver
+   
+ bankingbalance:
+  build: balance\
+  expose:
+    - '8010'
+  ports:
+   - '8010:8010'
+  depends_on:
+   - bankingserver
+ 
+
