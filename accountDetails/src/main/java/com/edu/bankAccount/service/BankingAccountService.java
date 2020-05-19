@@ -23,6 +23,8 @@ public class BankingAccountService {
 	RestTemplate rt;
 	List<User> userStore = null;
 	
+	final static String SERVER_HOST = "USER_BALANCE_SERVICE_HOST";
+	final static String SERVER_PORT = "USER_BALANCE_SERVICE_PORT";
 	static String uri = null;
 	
 	public BankingAccountService() {
@@ -30,18 +32,23 @@ public class BankingAccountService {
 		User user = new User(1, "default-user");
 		user.setBalance(new Balance(1, 1000));
 		userStore.add(user);
+		
+		setUri();
 	}
 	
 	public List<User> getUserDetails(){
+		
+		userStore = userStore.parallelStream()
+								.map((user) -> {
+									Balance b = rt.getForObject(uri + user.getId(), Balance.class);
+									user.setBalance(b);
+									return user;
+								}).collect(Collectors.toList());
 		return userStore;
 	}
 	
 	public User getUserDetail(int id) {
-		
-		String ip = System.getenv("USER_BALANCE_SERVICE_HOST");
-		String port = System.getenv("USER_BALANCE_SERVICE_PORT");
-		uri = "http://" + ip + ":" + port + "/balance/";
-		
+
 		Optional<User> user = userStore.parallelStream().filter((u) -> u.getId()==id)
 			.findFirst();
 		
@@ -86,5 +93,11 @@ public class BankingAccountService {
 		rt.delete(uri + user.get().getId());
 		userStore.remove(user.get());
 		return user.get();
+	}
+	
+	private void setUri() {
+		String ip = System.getenv(SERVER_HOST);
+		String port = System.getenv(SERVER_PORT);
+		uri = "http://" + ip + ":" + port + "/balance/";
 	}
 }
